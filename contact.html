@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Kisan Mitra</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html"><i class="fa-solid fa-leaf"></i> Kisan Mitra</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="buyer-dashboard.html">Dashboards</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="login.html" class="btn btn-outline">Login</a>
+                <a href="register.html" class="btn btn-primary">Sign Up</a>
+            </div>
+            <div class="hamburger">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <section class="section section-light" style="padding-bottom: 2rem;">
+        <div class="container text-center fade-up">
+            <span class="badge badge-primary">Support</span>
+            <h1 style="font-size: 3.5rem; margin-bottom: 1rem;">Get In Touch</h1>
+            <p style="font-size: 1.125rem; color: var(--text-muted); max-width: 600px; margin: 0 auto;">Our dedicated team is ready to assist institutional buyers and support our farmers.</p>
+        </div>
+    </section>
+
+    <!-- Contact Form -->
+    <section class="section" style="padding-top: 2rem;">
+        <div class="container">
+            <div class="grid-2 fade-up">
+                
+                <div class="card" style="padding: 3rem;">
+                    <h3 style="margin-bottom: 1.5rem; color: var(--primary-dark);">Send us a Message</h3>
+                    <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Message Received!');">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Work Email</label>
+                            <input type="email" id="email" placeholder="john@company.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Your Message</label>
+                            <textarea id="message" rows="4" placeholder="How can we help your procurement process?" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message</button>
+                    </form>
+                </div>
+
+                <div class="contact-card" style="padding: 2rem;">
+                    <h3 style="margin-bottom: 1.5rem;">Corporate Headquarters</h3>
+                    
+                    <div style="display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 2rem;">
+                        <div class="card-icon" style="margin: 0; width: 40px; height: 40px; font-size: 1rem;"><i class="fa-solid fa-location-dot"></i></div>
+                        <div>
+                            <strong style="display: block; margin-bottom: 0.25rem;">Office Address</strong>
+                            <p style="color: var(--text-muted);">Level 4, Agri-Tech Park<br>Cyber City, Gurugram 122002</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 2rem;">
+                        <div class="card-icon" style="margin: 0; width: 40px; height: 40px; font-size: 1rem;"><i class="fa-solid fa-envelope"></i></div>
+                        <div>
+                            <strong style="display: block; margin-bottom: 0.25rem;">Email Address</strong>
+                            <p style="color: var(--text-muted);">hello@kisanmitra.in<br>support@kisanmitra.in</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                        <div class="card-icon" style="margin: 0; width: 40px; height: 40px; font-size: 1rem;"><i class="fa-solid fa-phone"></i></div>
+                        <div>
+                            <strong style="display: block; margin-bottom: 0.25rem;">Support Helpline</strong>
+                            <p style="color: var(--text-muted);">1800-456-7890 (Toll Free)<br>Mon - Sat (9AM to 7PM)</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="grid-4 footer-grid">
+                <div class="footer-col" style="grid-column: span 2;">
+                    <div class="logo" style="margin-bottom: 1rem;"><a href="index.html" style="color: white;"><i class="fa-solid fa-leaf text-primary"></i> Kisan Mitra</a></div>
+                    <p style="color: var(--text-light); max-width: 400px; margin-bottom: 1.5rem;">Empowering farmers with modern technology. Direct farm-to-market platform cutting out the middleman via WhatsApp.</p>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title">Platform</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="buyer-dashboard.html">Buyer Dashboard</a></li>
+                        <li><a href="admin-dashboard.html">Admin Portal</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title">Contact</h4>
+                    <ul>
+                        <li><a href="contact.html">Support</a></li>
+                        <li><a href="login.html">Login</a></li>
+                        <li><a href="register.html">Sign Up</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Kisan Mitra Pvt Ltd. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="js/script.js"></script>
+</body>
+</html>

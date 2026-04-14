@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyer Dashboard | Kisan Mitra</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body style="overflow: hidden;">
+
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="sidebar-logo logo">
+                <a href="index.html"><i class="fa-solid fa-leaf"></i> Kisan Mitra</a>
+            </div>
+            <ul class="sidebar-menu">
+                <li><p style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-light); font-weight: 700; margin: 1rem 0 0.5rem 1rem;">Marketplace</p></li>
+                <li><a href="#" class="active"><i class="fa-solid fa-store"></i> Explore Crops</a></li>
+                <li><a href="#"><i class="fa-solid fa-star"></i> Saved Listings</a></li>
+                <li><p style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-light); font-weight: 700; margin: 1rem 0 0.5rem 1rem;">My Account</p></li>
+                <li><a href="#"><i class="fa-solid fa-cart-flatbed"></i> My Orders</a></li>
+                <li style="margin-top: 2rem;"><a href="#" onclick="logout()" style="color: #DC2626;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content" style="height: 100vh; overflow-y: auto; overflow-x: hidden; padding-bottom: 4rem;">
+            <div class="dashboard-header">
+                <div>
+                    <h2 style="margin: 0;">Marketplace</h2>
+                    <p style="color: var(--text-muted); font-size: 0.875rem;">Find the best produce directly from farmers</p>
+                </div>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <a href="index.html" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Back to Home</a>
+                    <span id="userName" style="font-weight: 600; font-size: 0.875rem;">Company</span>
+                    <img src="https://ui-avatars.com/api/?name=Buyer+Corp&background=F59E0B&color=fff" alt="Buyer" id="userAvatar" style="width: 40px; height: 40px; border-radius: 50%;">
+                </div>
+            </div>
+
+            <div class="filter-bar fade-up" style="margin-bottom: 2rem; border-radius: var(--radius-md); display:flex; gap:1rem;">
+                <input type="text" id="searchInput" class="filter-input" placeholder="Search crop (e.g., Tomato)..." onkeyup="filterDOM()" style="flex: 2;">
+                <select id="locFilter" class="filter-input" style="flex:1;" onchange="filterDOM()">
+                    <option value="">Any Location</option>
+                    <option value="MH">Maharashtra (MH)</option>
+                    <option value="MP">Madhya Pradesh (MP)</option>
+                </select>
+                <button class="btn btn-primary" style="padding: 0.5rem 1.5rem;" onclick="fetchListings()"><i class="fa-solid fa-rotate-right"></i></button>
+            </div>
+
+            <div id="listingsGrid" class="grid-3 fade-up">
+                <p style="grid-column: span 3; text-align: center; color: var(--text-muted); padding: 3rem;">Loading dynamic listings from backend...</p>
+            </div>
+            
+            <div class="table-container fade-up" style="margin-top: 4rem;">
+                <div class="table-header">
+                    <h3 style="margin: 0; font-size: 1.125rem;"><i class="fa-solid fa-clock-rotate-left"></i> My Order History</h3>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Crop</th>
+                            <th>Quantity</th>
+                            <th>Value</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="myOrdersTable">
+                        <tr><td colspan="5" style="text-align:center;">Loading history...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        const user = getAuth();
+        if(!user) {
+            window.location.href = 'login.html';
+        } else {
+            document.getElementById('userName').innerText = user.name || 'Buyer';
+            document.getElementById('userAvatar').src = `https://ui-avatars.com/api/?name=${user.name}&background=F59E0B&color=fff`;
+        }
+
+        async function fetchListings() {
+            try {
+                const res = await fetch(`${API_URL}/listings`);
+                if(res.ok) {
+                    const listings = await res.json();
+                    renderListings(listings);
+                }
+            } catch (e) {
+                document.getElementById('listingsGrid').innerHTML = '<p style="grid-column:span 3;color:red;text-align:center;">Error connecting to API. Have you started the Python server?</p>';
+            }
+        }
+
+        function renderListings(arr) {
+            const grid = document.getElementById('listingsGrid');
+            if(arr.length === 0) {
+                grid.innerHTML = '<p style="grid-column:span 3;text-align:center;">No crop listings available right now.</p>';
+                return;
+            }
+            grid.innerHTML = '';
+            arr.forEach(listing => {
+                const card = document.createElement('div');
+                card.className = 'card fade-up visible listing-card';
+                card.setAttribute('data-crop', listing.crop_name.toLowerCase());
+                card.setAttribute('data-loc', listing.location.toLowerCase());
+                card.style.padding = '1.5rem';
+                
+                const badgeStyle = listing.verified ? "badge-primary" : "";
+                const badgeText = listing.verified ? "Verified Quality" : "Quality Pending";
+                const bgStyle = listing.verified ? "" : `background: #E5E7EB;`;
+                
+                card.innerHTML = `
+                    <span class="badge ${badgeStyle}" style="margin-bottom: 1rem; ${bgStyle}">${badgeText}</span>
+                    <h3 style="margin-bottom: 0.5rem;">${listing.crop_name}</h3>
+                    <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;"><i class="fa-solid fa-location-dot"></i> ${listing.location} • Farmer: ${listing.farmer_name}</p>
+                    
+                    <div style="background: #F9FAFB; padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="color: var(--text-muted); font-size: 0.875rem;">Quantity Available</span>
+                            <span style="font-weight: 600;">${listing.quantity}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: var(--text-muted); font-size: 0.875rem;">Asking Price</span>
+                            <span style="font-weight: 700; color: var(--primary);">₹${listing.price_per_unit}</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" style="width: 100%;" onclick="orderCrop(${listing.id}, '${listing.price_per_unit}')">Place Order</button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterDOM() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const loc = document.getElementById('locFilter').value.toLowerCase();
+            const cards = document.querySelectorAll('.listing-card');
+            
+            cards.forEach(card => {
+                const matchName = card.getAttribute('data-crop').includes(query);
+                const matchLoc = card.getAttribute('data-loc').includes(loc);
+                
+                if (matchName && matchLoc) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        async function fetchHistory() {
+            try {
+                const u = getAuth();
+                const res = await fetch(`${API_URL}/user/${u.user_id}/orders`);
+                const orders = await res.json();
+                const tbody = document.getElementById('myOrdersTable');
+                if(!orders || orders.length===0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">You have no past orders.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = '';
+                orders.forEach(o => {
+                    const statusClass = (o.status && o.status.toLowerCase() === 'completed') ? 'status-success' : 'status-pending';
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>#ORD-${10000+o.id}</td>
+                            <td>${o.crop_name}</td>
+                            <td>${o.quantity}</td>
+                            <td>₹${o.value}</td>
+                            <td><span class="status-pill ${statusClass}">${o.status}</span></td>
+                        </tr>
+                    `;
+                });
+            } catch(e) { console.error(e); }
+        }
+
+        async function orderCrop(listingId, priceString) {
+            if(!confirm("Are you sure you want to place a purchase order for this crop?")) return;
+            try {
+                const res = await fetch(`${API_URL}/orders`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({buyer_id: getAuth().user_id, listing_id: listingId, value: priceString})
+                });
+                if(res.ok) {
+                    alert("Order successfully placed! Admin has been notified.");
+                    fetchHistory();
+                }
+                else alert("Failed to place order.");
+            } catch(e) {
+                alert("Connection error.");
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchListings();
+            fetchHistory();
+        });
+    </script>
+</body>
+</html>

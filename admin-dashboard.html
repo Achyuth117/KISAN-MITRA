@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Kisan Mitra</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body style="overflow: hidden;">
+
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="sidebar-logo logo">
+                <a href="index.html"><i class="fa-solid fa-leaf"></i> Kisan Mitra</a>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active"><i class="fa-solid fa-chart-pie"></i> Analytics Overview</a></li>
+                <li style="margin-top: 2rem;"><a href="#" onclick="logout()" style="color: #DC2626;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content" style="height: 100vh; overflow-y: auto;">
+            <div class="dashboard-header">
+                <div>
+                    <h2 style="margin: 0;">Admin Dashboard</h2>
+                    <p style="color: var(--text-muted); font-size: 0.875rem;">Welcome back, System Administrator</p>
+                </div>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <a href="index.html" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Back to Home</a>
+                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=10B981&color=fff" alt="Admin" style="width: 40px; height: 40px; border-radius: 50%;">
+                </div>
+            </div>
+
+            <div class="stat-cards fade-up">
+                <div class="stat-card">
+                    <div class="stat-title">Total Platform Users</div>
+                    <div class="stat-value" id="s_users">...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Active Crop Listings</div>
+                    <div class="stat-value" id="s_listings">...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Orders Processed</div>
+                    <div class="stat-value" id="s_orders">...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Revenue</div>
+                    <div class="stat-value" id="s_rev">...</div>
+                </div>
+            </div>
+
+            <!-- Static Graphs Mockup -->
+            <div class="grid-2 fade-up" style="margin-top: 2rem;">
+                <div class="card" style="padding: 1.5rem;">
+                    <h3>Revenue Growth (Q1 2026)</h3>
+                    <div style="height: 150px; display: flex; align-items: flex-end; gap: 10%; padding-top: 1rem; border-bottom: 1px solid #E5E7EB; margin-top: 1rem;">
+                        <div style="width: 25%; background: var(--primary); height: 30%; border-radius: 4px 4px 0 0;"></div>
+                        <div style="width: 25%; background: var(--primary); height: 50%; border-radius: 4px 4px 0 0;"></div>
+                        <div style="width: 25%; background: var(--primary); height: 80%; border-radius: 4px 4px 0 0;"></div>
+                        <div style="width: 25%; background: var(--primary); height: 100%; border-radius: 4px 4px 0 0;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; color: var(--text-muted); font-size: 0.75rem;">
+                        <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span>
+                    </div>
+                </div>
+                <div class="card" style="padding: 1.5rem;">
+                    <h3>User Distribution</h3>
+                    <div style="display: flex; height: 150px; align-items: center; justify-content: center; gap: 2rem;">
+                        <div style="width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(var(--primary) 0% 75%, #FCD34D 75% 100%);"></div>
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;"><div style="width:12px; height:12px; background:var(--primary); border-radius:50%;"></div> Farmers (75%)</div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;"><div style="width:12px; height:12px; background:#FCD34D; border-radius:50%;"></div> Buyers (25%)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manage Listings Table -->
+            <div class="table-container fade-up" style="margin-top: 2rem;">
+                <div class="table-header">
+                    <h3 style="margin: 0; font-size: 1.125rem;">Manage Pending Listings</h3>
+                    <span class="badge badge-primary">Admin Action Required</span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Crop / Qty</th>
+                            <th>Farmer</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listingsTableBody">
+                        <tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:2rem;">Loading pending listings...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-container fade-up" style="margin-top: 2rem;">
+                <div class="table-header">
+                    <h3 style="margin: 0; font-size: 1.125rem;">Recent Transactions</h3>
+                    <button class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="fetchStats()">Refresh Data</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Buyer</th>
+                            <th>Seller</th>
+                            <th>Crop / Qty</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:2rem;">Loading transactions...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        const user = getAuth();
+        if(!user || user.role !== 'admin') {
+             window.location.href = 'login.html';
+        }
+
+        async function fetchStats() {
+            try {
+                const res = await fetch(`${API_URL}/admin/stats`);
+                if(res.ok) {
+                    const data = await res.json();
+                    document.getElementById('s_users').innerText = data.total_users;
+                    document.getElementById('s_listings').innerText = data.active_listings;
+                    document.getElementById('s_orders').innerText = data.orders_processed;
+                    document.getElementById('s_rev').innerText = data.revenue;
+                }
+                
+                // Fetch orders
+                const ores = await fetch(`${API_URL}/admin/orders`);
+                if(ores.ok) {
+                    const orders = await ores.json();
+                    const tbody = document.getElementById('ordersTableBody');
+                    if(orders.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No recent transactions.</td></tr>';
+                        return;
+                    }
+                    tbody.innerHTML = '';
+                    orders.forEach(o => {
+                        const tr = document.createElement('tr');
+                        const statusClass = (o.status && o.status.toLowerCase() === 'completed') ? 'status-success' : 'status-pending';
+                        tr.innerHTML = `
+                            <td style="font-weight: 600; color: var(--primary);">#ORD-${10000 + o.order_id}</td>
+                            <td>${o.buyer_name}</td>
+                            <td>${o.seller_name}</td>
+                            <td>${o.crop_name} / ${o.quantity}</td>
+                            <td><span class="status-pill ${statusClass}">${o.status}</span></td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+                
+                // Fetch listings to manage
+                const lres = await fetch(`${API_URL}/admin/listings`);
+                if(lres.ok) {
+                    const listings = await lres.json();
+                    const ltbody = document.getElementById('listingsTableBody');
+                    if(listings.length === 0) {
+                         ltbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No listings to manage.</td></tr>';
+                    } else {
+                         ltbody.innerHTML = '';
+                         listings.forEach(l => {
+                             const ltr = document.createElement('tr');
+                             const verifiedText = l.verified ? '<span style="color:var(--primary);">Verified</span>' : '<span style="color:#F59E0B;">Pending</span>';
+                             ltr.innerHTML = `
+                                 <td><strong>${l.crop_name}</strong> <span style="color:var(--text-muted);font-size:0.875rem;">(${l.quantity} at ₹${l.price_per_unit})</span></td>
+                                 <td>${l.farmer_name}</td>
+                                 <td>${l.location}</td>
+                                 <td>${verifiedText}</td>
+                                 <td>
+                                    ${!l.verified ? `<button class="btn btn-outline" style="border-color:var(--primary);color:var(--primary);padding:0.2rem 0.5rem;font-size:0.75rem;" onclick="verifyListing(${l.id}, 'approve')">Approve</button>` : ''}
+                                    <button class="btn btn-outline" style="border-color:#DC2626;color:#DC2626;padding:0.2rem 0.5rem;font-size:0.75rem;" onclick="verifyListing(${l.id}, 'reject')">Reject</button>
+                                 </td>
+                             `;
+                             ltbody.appendChild(ltr);
+                         });
+                    }
+                }
+            } catch (e) {
+                console.error("API error", e);
+            }
+        }
+
+        async function verifyListing(id, action) {
+            try {
+                await fetch(`${API_URL}/admin/listings/${id}/verify`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({action: action})
+                });
+                fetchStats(); // Refresh DB view
+            } catch(e) { console.error(e); }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchStats);
+    </script>
+</body>
+</html>
